@@ -3,7 +3,7 @@
 use App\Support\Http;
 use Illuminate\Http\JsonResponse;
 
-if (! function_exists('http_success')) {
+if (!function_exists('http_success')) {
     /**
      * 返回 HTTP 200 响应.
      *
@@ -19,7 +19,7 @@ if (! function_exists('http_success')) {
             $message = Http::MESSAGES[$code];
         }
 
-        if (! is_object($data)) {
+        if (!is_object($data)) {
             $data = (object) $data;
         }
 
@@ -27,7 +27,7 @@ if (! function_exists('http_success')) {
     }
 }
 
-if (! function_exists('http_no_content')) {
+if (!function_exists('http_no_content')) {
     /**
      * 返回 HTTP 204 响应.
      *
@@ -39,7 +39,7 @@ if (! function_exists('http_no_content')) {
     }
 }
 
-if (! function_exists('is_paginate')) {
+if (!function_exists('is_paginate')) {
     /**
      * 是否分页.
      *
@@ -48,5 +48,29 @@ if (! function_exists('is_paginate')) {
     function is_paginate()
     {
         return (bool) request()->input('paginate', true);
+    }
+}
+
+if (!function_exists('http_error')) {
+    /**
+     * 返回 HTTP 500 响应.
+     *
+     * @param  string|null  $message
+     * @param  mixed  $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    function http_error(string $message = null, $data = null): JsonResponse
+    {
+        $code = 500;
+
+        if (is_null($message)) {
+            $message = Http::MESSAGES[$code];
+        }
+
+        if (!is_object($data)) {
+            $data = (object) $data;
+        }
+
+        return response()->json(compact('code', 'message', 'data'), $code);
     }
 }

@@ -11,17 +11,12 @@
 |
  */
 
-// Route::group([
-//     // 'middleware' => 'api',
-//     'prefix' => 'auth',
-// ], function ($router) {
-//     Route::post('register', 'AuthController@register');
-//     Route::post('login', 'AuthController@login');
-//     Route::post('logout', 'AuthController@logout');
-//     Route::post('refresh', 'AuthController@refresh');
-//     Route::post('me', 'AuthController@me');
-// });
+Route::group([
+    'prefix' => 'v1',
+], function () {
+    Route::prefix('/user')->group(function () {
+        Route::post('/register', 'Auth\AuthController@register');
+        Route::get('/{id}', 'Auth\AuthController@me');
+    });
 
-Route::get('chaos', function () {
-    return 'Hello World1';
 });
