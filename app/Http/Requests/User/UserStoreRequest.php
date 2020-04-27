@@ -23,11 +23,10 @@ class UserStoreRequest extends FormRequest
      */
     public function rules()
     {
-        // TOTO bug:校验失败 Call to undefined function Overtrue\LaravelLang\str_contains(
         return [
-            'email' => 'required|string|email|max:255| unique:users',
+            // 'email' => 'required|string|email|max:255| unique:users',
+            'email' => 'required|string|email|max:255',
             'password' => 'required|string',
-            'name' => 'required|string|max:20',
         ];
     }
     /**

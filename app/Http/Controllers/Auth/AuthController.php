@@ -93,10 +93,6 @@ class AuthController extends Controller
      */
     public function register(UserStoreRequest $request)
     {
-        return response()->json([
-            'access_token' => 1,
-            'token_type' => '2',
-        ]);
         if (User::columnValueExists('name', $request->name, null, User::withTrashed())) {
             // throw AdminBusinessException::make(AdminCodes::ADMIN_USERNAME_ALREADY_EXISTS);
             return http_success('注册失败', '名字已存在');
