@@ -15,6 +15,7 @@
         "kalnoy/nestedset": "^5.0",
         "kunr/pangu.php": "dev-master",
         "laravel/framework": "^6.0",
+        "laravel/helpers": "^1.2",
         "laravel/horizon": "^3.3",
         "laravel/telescope": "^2.1",
         "laravel/tinker": "^1.0",
