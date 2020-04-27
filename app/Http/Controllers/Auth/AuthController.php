@@ -2,16 +2,40 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Codes\AppCodes;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller as BaseController;
+use App\Http\Requests\User\PasswordLoginRequest;
 use App\Http\Requests\User\UserStoreRequest;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class AuthController extends Controller
+class AuthController extends BaseController
 {
+    /**
+     * The guard name.
+     *
+     * @var string
+     */
+    protected $guardName = 'weibo';
+    /**
+     * The JWTGuard instance.
+     *
+     * @var \Tymon\JWTAuth\JWTGuard
+     */
+    protected $jwtGuard;
+
+    /**
+     * Controller methods of the throttle middleware should exclude.
+     *
+     * @var array
+     */
+    protected $throttleExcepts = [];
+
     /**
      * Create a new AuthController instance.
      *
@@ -19,7 +43,8 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->jwtGuard = auth($this->guardName);
+        $this->middleware('auth:api', ['except' => ['passwordLogin', 'register']]);
     }
 
     /**
@@ -27,15 +52,27 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login()
+    public function passwordLogin(PasswordLoginRequest $request)
     {
-        $credentials = request(['email', 'password']);
+        $credentials = $request->only('email', 'password');
 
-        if (!$token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if (!$token = $this->jwtGuard->attempt($credentials)) {
+            return http_error('登录失败', 500, ['error' => AppCodes::MESSAGES[AppCodes::AUTH_FAILED]]);
         }
 
-        return $this->respondWithToken($token);
+        return $this->responseWithToken($token);
+    }
+    protected function responseWithToken(string $token): JsonResponse
+    {
+        /** @var \Tymon\JWTAuth\Factory $factory */
+        /** @noinspection PhpUndefinedMethodInspection */
+        $factory = $this->jwtGuard->factory();
+
+        return http_success('登录成功', [
+            'token' => $token,
+            'tokenType' => 'bearer',
+            'expiresIn' => $factory->getTTL() * 60,
+        ]);
     }
 
     /**
@@ -43,9 +80,11 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function me()
+    public function show(int $id): UserResource
     {
-        return response()->json(auth()->user());
+        $user = User::findOrFail($id);
+
+        return new AdminResource($user);
     }
 
     /**
@@ -94,13 +133,11 @@ class AuthController extends Controller
     public function register(UserStoreRequest $request)
     {
         if (User::columnValueExists('name', $request->name, null, User::withTrashed())) {
-            // throw AdminBusinessException::make(AdminCodes::ADMIN_USERNAME_ALREADY_EXISTS);
-            return http_success('注册失败', '名字已存在');
+            return http_error('注册失败', 500, ['error' => AppCodes::MESSAGES[AppCodes::USER_NAME_ALREADY_EXISTS]]);
         }
 
         if (User::columnValueExists('email', $request->email, null, User::withTrashed())) {
-            // throw AdminBusinessException::make(AdminCodes::ADMIN_MOBILE_NUMBER_ALREADY_EXISTS);
-            return http_success('注册失败', '邮箱地址已存在');
+            return http_error('注册失败', 500, ['error' => AppCodes::MESSAGES[AppCodes::USER_EMAIL_ALREADY_EXISTS]]);
         }
         return DB::transaction(function () use ($request) {
             $user = new User([

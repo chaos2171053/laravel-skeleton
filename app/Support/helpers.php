@@ -59,9 +59,8 @@ if (!function_exists('http_error')) {
      * @param  mixed  $data
      * @return \Illuminate\Http\JsonResponse
      */
-    function http_error(string $message = null, $data = null): JsonResponse
+    function http_error(string $message = null, $code = 500, $data = null): JsonResponse
     {
-        $code = 500;
 
         if (is_null($message)) {
             $message = Http::MESSAGES[$code];

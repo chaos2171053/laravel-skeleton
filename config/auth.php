@@ -40,7 +40,7 @@ return [
             'driver' => 'jwt',
             'provider' => 'admins',
         ],
-        'api' => [
+        'weibo' => [
             'driver' => 'jwt',
             'provider' => 'users',
         ],

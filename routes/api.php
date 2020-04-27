@@ -16,7 +16,8 @@ Route::group([
 ], function () {
     Route::prefix('/user')->group(function () {
         Route::post('/register', 'Auth\AuthController@register');
-        Route::get('/{id}', 'Auth\AuthController@me');
+        Route::post('/password-login', 'Auth\AuthController@passwordLogin');
+        Route::get('/{id}', 'Auth\AuthController@show');
     });
 
 });
