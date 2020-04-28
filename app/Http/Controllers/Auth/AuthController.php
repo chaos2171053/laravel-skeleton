@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Controller as BaseController;
 use App\Http\Requests\User\PasswordLoginRequest;
 use App\Http\Requests\User\UserStoreRequest;
+use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -120,12 +121,12 @@ class AuthController extends BaseController
     {
         return response()->json([
             'access_token' => $token,
-            'token_type' => 'bearer',
+            'token_type' => 'Bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
         ]);
     }
     /**
-     * Undocumented function
+     * user register
      *
      * @param Request $request
      * @return void
@@ -149,5 +150,39 @@ class AuthController extends BaseController
             return http_success('注册成功', $user);
         });
 
+    }
+
+    /**
+     * update user`s name，email，and password
+     *
+     * @param UserUpdateRequest $request
+     * @param integer $id
+     * @return UserResource
+     */
+    public function update(UserUpdateRequest $request, int $id)
+    {
+        $user = User::findOrFail($id);
+
+        //$this->authorize('weibo.update-user', $user);
+
+        if (($request->email) !== ($user->email)) {
+            return http_error(AppCodes::MESSAGES[AppCodes::UPDATE_FAILED], 500, ['error' => AppCodes::MESSAGES[AppCodes::USER_EMAIL_NO_MATCH]]);
+        }
+
+        if (user::columnValueExists('name', $request->name, $user, User::withTrashed())) {
+            return http_error(AppCodes::MESSAGES[AppCodes::UPDATE_FAILED], 500, ['error' => AppCodes::MESSAGES[AppCodes::USER_NAME_ALREADY_EXISTS]]);
+        }
+
+        return DB::transaction(function () use ($user, $request) {
+            $user->fill([
+                'name' => $request->name,
+                'email' => $request->email,
+            ]);
+            if ($request->has('password')) {
+                $user->password = $request->password;
+            }
+            $user->save();
+            return new UserResource($user);
+        });
     }
 }
