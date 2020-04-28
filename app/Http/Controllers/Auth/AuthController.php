@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Controller as BaseController;
 use App\Http\Requests\User\PasswordLoginRequest;
 use App\Http\Requests\User\UserStoreRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -44,7 +45,7 @@ class AuthController extends BaseController
     public function __construct()
     {
         $this->jwtGuard = auth($this->guardName);
-        $this->middleware('auth:api', ['except' => ['passwordLogin', 'register']]);
+        $this->middleware('auth:weibo', ['except' => ['passwordLogin', 'register']]);
     }
 
     /**
@@ -80,11 +81,10 @@ class AuthController extends BaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(int $id): UserResource
+    public function show(int $id)
     {
         $user = User::findOrFail($id);
-
-        return new AdminResource($user);
+        return new UserResource($user);
     }
 
     /**
