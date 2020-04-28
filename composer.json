@@ -11,6 +11,7 @@
         "php": "^7.2",
         "ext-json": "*",
         "ext-pdo": "*",
+        "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
         "kalnoy/nestedset": "^5.0",
         "kunr/pangu.php": "dev-master",
