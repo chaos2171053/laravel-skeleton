@@ -185,4 +185,20 @@ class AuthController extends BaseController
             return new UserResource($user);
         });
     }
+    /**
+     * delte user
+     *
+     * @param integer $id
+     * @return void
+     */
+    public function destroy(int $id)
+    {
+        $user = User::findOrFail($id);
+
+        // $this->authorize('admin.destroy-admin', $admin);
+        // TODO 权限过滤。如果一个登录用户利用token去删除admin
+        $user->delete();
+
+        return http_success(AppCodes::MESSAGES[AppCodes::DELETE_SUCCESS]);
+    }
 }

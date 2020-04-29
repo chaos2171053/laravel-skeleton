@@ -21,6 +21,7 @@ abstract class AppCodes
     public const MESSAGES = [
         self::UPDATE_FAILED => '更新失败',
         self::DELETE_FAILED => '删除失败',
+        self::DELETE_SUCCESS => '删除成功',
         self::AUTH_FAILED => '邮箱地址或密码错误',
         self::USER_NAME_ALREADY_EXISTS => '用户名已存在',
         self::USER_EMAIL_ALREADY_EXISTS => '邮箱地址已存在',

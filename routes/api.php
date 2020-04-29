@@ -19,6 +19,7 @@ Route::group([
         Route::post('/password-login', 'Auth\AuthController@passwordLogin')->name('users.passwordLogin');
         Route::get('/{id}', 'Auth\AuthController@show')->name('users.show');
         Route::put('/{id}', 'Auth\AuthController@update')->name('users.update');
+        Route::delete('/{id}', 'Auth\AuthController@destroy')->name('users.destory');
     });
 
 });
