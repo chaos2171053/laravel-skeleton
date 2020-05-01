@@ -70,6 +70,6 @@ if (!function_exists('http_error')) {
             $data = (object) $data;
         }
 
-        return response()->json(compact('code', 'message', 'data'), $code);
+        return response()->json(compact('code', 'message', 'data'), 200);
     }
 }
