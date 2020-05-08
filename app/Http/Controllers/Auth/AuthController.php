@@ -15,9 +15,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\JWTAuth;
 
 class AuthController extends BaseController
 {
+
     /**
      * The guard name.
      *
@@ -54,27 +56,24 @@ class AuthController extends BaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function passwordLogin(PasswordLoginRequest $request)
+    public function passwordLogin(PasswordLoginRequest $request): JsonResponse
     {
         $credentials = $request->only('email', 'password');
 
         if (!$token = $this->jwtGuard->attempt($credentials)) {
             return http_error('登录失败', 500, ['error' => AppCodes::MESSAGES[AppCodes::AUTH_FAILED]]);
         }
+        $user = $this->jwtGuard->user();
 
-        return $this->responseWithToken($token);
-    }
-    protected function responseWithToken(string $token): JsonResponse
-    {
-        /** @var \Tymon\JWTAuth\Factory $factory */
-        /** @noinspection PhpUndefinedMethodInspection */
         $factory = $this->jwtGuard->factory();
 
         return http_success('登录成功', [
             'token' => $token,
             'tokenType' => 'bearer',
             'expiresIn' => $factory->getTTL() * 60,
+            'userInfo' => new UserResource($user),
         ]);
+
     }
 
     /**
