@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\JWTAuth;
 
+// 不应该叫AuthController，应该是UserCOntroller
+
 class AuthController extends BaseController
 {
 
@@ -178,7 +180,7 @@ class AuthController extends BaseController
                 'email' => $request->email,
             ]);
             if ($request->has('password')) {
-                $user->password = $request->password;
+                $user->password = Hash::make($request->password);
             }
             $user->save();
             return new UserResource($user);
