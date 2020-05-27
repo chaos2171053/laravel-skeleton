@@ -162,7 +162,7 @@ class AuthController extends BaseController
     {
         $user = User::findOrFail($id);
 
-        //$this->authorize('weibo.update-user', $user);
+        $this->authorize('update', $user);
 
         if (($request->email) !== ($user->email)) {
             return http_error(AppCodes::MESSAGES[AppCodes::UPDATE_FAILED], 500, ['error' => AppCodes::MESSAGES[AppCodes::USER_EMAIL_NO_MATCH]]);
@@ -194,8 +194,7 @@ class AuthController extends BaseController
     {
         $user = User::findOrFail($id);
 
-        // $this->authorize('admin.destroy-admin', $admin);
-        // TODO 权限过滤。如果一个登录用户利用token去删除admin
+        //$this->authorize('destroyn', $admin);
         $user->delete();
 
         return http_success(AppCodes::MESSAGES[AppCodes::DELETE_SUCCESS]);
