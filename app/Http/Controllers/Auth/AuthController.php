@@ -83,7 +83,7 @@ class AuthController extends BaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(int $id)
+    public function show(int $id): UserResource
     {
         $user = User::findOrFail($id);
         return new UserResource($user);
@@ -200,5 +200,20 @@ class AuthController extends BaseController
         $user->delete();
 
         return http_success(AppCodes::MESSAGES[AppCodes::DELETE_SUCCESS]);
+    }
+
+    /**
+     * Get user list
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function index(Request $request): JsonResponse
+    {
+        // TODO filter deleted user
+        $page = $request->page;
+        $size = $request->size;
+        //$users = User::withTrashed()->paginate($size, ['*'], 'page', $page);
+        $users = User::paginate($size, ['*'], 'page', $page);
+        return http_success('获取成功', $users);
     }
 }

@@ -20,7 +20,7 @@ class AppendToken
     {
         $response = $next($request);
 
-        if (! in_array($request->route()->getName(), $routeNames)) {
+        if (!in_array($request->route()->getName(), $routeNames)) {
             return $response;
         }
 
@@ -36,7 +36,7 @@ class AppendToken
         $exp = $payload->get('exp');
         $minutes = floor(($exp - time()) / 60);
 
-        $response = $next($request);
+        // $response = $next($request);
         $response->withCookie(cookie('token', $token, $minutes));
 
         return $response;
