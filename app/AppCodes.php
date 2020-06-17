@@ -14,6 +14,7 @@ abstract class AppCodes
     public const USER_NAME_ALREADY_EXISTS = 40002001;
     public const USER_EMAIL_ALREADY_EXISTS = 40002002;
     public const USER_EMAIL_NO_MATCH = 40002003;
+    public const USER_EMAIL_NO_COMFIRMED = 40002004;
 
     /**
      * @var array
@@ -26,5 +27,6 @@ abstract class AppCodes
         self::USER_NAME_ALREADY_EXISTS => '用户名已存在',
         self::USER_EMAIL_ALREADY_EXISTS => '邮箱地址已存在',
         self::USER_EMAIL_NO_MATCH => '邮箱地址不匹配',
+        self::USER_EMAIL_NO_COMFIRMED => '邮箱地址未验证',
     ];
 }

@@ -65,7 +65,11 @@ class AuthController extends BaseController
         if (!$token = $this->jwtGuard->attempt($credentials)) {
             return http_error('登录失败', 500, ['error' => AppCodes::MESSAGES[AppCodes::AUTH_FAILED]]);
         }
+
         $user = $this->jwtGuard->user();
+        if (!$user->activated) {
+            return http_error('登录失败', 500, ['error' => AppCodes::MESSAGES[AppCodes::USER_EMAIL_NO_COMFIRMED]]);
+        }
 
         $factory = $this->jwtGuard->factory();
 
