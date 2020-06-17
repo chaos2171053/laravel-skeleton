@@ -21,6 +21,7 @@ Route::group([
         Route::get('/{id}', 'Auth\AuthController@show')->name('users.show');
         Route::put('/{id}', 'Auth\AuthController@update')->name('users.update');
         Route::delete('/{id}', 'Auth\AuthController@destroy')->name('users.destory');
+        Route::post('/comfirm-email', 'Auth\AuthController@comfirmEmail')->name('users.comfirmEmail');
     });
 
 });

@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\JWTAuth;
-
+use Mail;
 // 不应该叫AuthController，应该是UserCOntroller
 
 class AuthController extends BaseController
@@ -67,9 +67,7 @@ class AuthController extends BaseController
         }
 
         $user = $this->jwtGuard->user();
-        if (!$user->activated) {
-            return http_error('登录失败', 500, ['error' => AppCodes::MESSAGES[AppCodes::USER_EMAIL_NO_COMFIRMED]]);
-        }
+
 
         $factory = $this->jwtGuard->factory();
 
@@ -219,5 +217,14 @@ class AuthController extends BaseController
         //$users = User::withTrashed()->paginate($size, ['*'], 'page', $page);
         $users = User::paginate($size, ['*'], 'page', $page);
         return http_success('获取成功', $users);
+    }
+
+    public function comfirmEmail() {
+        $user = $this->jwtGuard->user();
+        $user->activated = true;
+        $user->activation_token = null;
+        $user->email_verified_at = now();
+       $user->save();
+        return http_success('激活成功');
     }
 }
