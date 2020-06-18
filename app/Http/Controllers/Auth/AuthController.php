@@ -224,7 +224,11 @@ class AuthController extends BaseController
         $user->activated = true;
         $user->activation_token = null;
         $user->email_verified_at = now();
-       $user->save();
+        $user->save();
         return http_success('激活成功');
+    }
+
+    public function resetPasswordByEmail() {
+
     }
 }

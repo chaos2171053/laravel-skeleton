@@ -22,6 +22,7 @@ Route::group([
         Route::put('/{id}', 'Auth\AuthController@update')->name('users.update');
         Route::delete('/{id}', 'Auth\AuthController@destroy')->name('users.destory');
         Route::post('/comfirm-email', 'Auth\AuthController@comfirmEmail')->name('users.comfirmEmail');
+        Route::post('/password/reset', 'Auth\AuthController@resetPasswordByEmail')->name('users.resetPasswordByEmail');
     });
 
 });
