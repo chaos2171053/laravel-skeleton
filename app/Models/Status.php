@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use Override\Laravel\Illuminate\Database\Eloquent\Model;
 
 /**

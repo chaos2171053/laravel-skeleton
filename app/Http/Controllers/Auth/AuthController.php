@@ -231,4 +231,14 @@ class AuthController extends BaseController
     public function resetPasswordByEmail() {
 
     }
+
+    public function Status(Request $request){
+        $user = $this->jwtGuard->user();
+        $page = $request->page;
+        $size = $request->size;
+        $statuses = $user->statuses()
+            ->orderBy('created_at', 'desc')
+            ->paginate($size, ['*'], 'page', $page);
+        return http_success('获取成功', $statuses);
+    }
 }
