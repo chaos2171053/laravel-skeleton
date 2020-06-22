@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StatusesController extends BaseController
 {
@@ -19,7 +20,7 @@ class StatusesController extends BaseController
         $this->validate($request, [
             'content' => 'required|max:140',
         ]);
-        $user = $this->jwtGuard->user();
+        $user = auth()->user();
         $user->statuses()->create([
             'content' => $request['content'],
         ]);
