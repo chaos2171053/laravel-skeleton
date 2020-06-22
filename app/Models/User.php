@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Status;
 use App\Models\Traits\ColumnValueExists;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;

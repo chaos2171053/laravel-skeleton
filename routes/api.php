@@ -15,6 +15,7 @@ Route::group([
     'prefix' => 'v1',
 ], function () {
     Route::prefix('/users')->group(function () {
+        Route::get('/feed', 'Auth\AuthController@feed')->name('users.feed');
         Route::get('/{page?}', 'Auth\AuthController@index')->name('users.index');
         Route::post('/register', 'Auth\AuthController@register')->name('users.register');
         Route::post('/password-login', 'Auth\AuthController@passwordLogin')->name('users.passwordLogin');

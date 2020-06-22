@@ -15,8 +15,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\JWTAuth;
 use Mail;
+use Tymon\JWTAuth\JWTAuth;
+
 // 不应该叫AuthController，应该是UserCOntroller
 
 class AuthController extends BaseController
@@ -67,7 +68,6 @@ class AuthController extends BaseController
         }
 
         $user = $this->jwtGuard->user();
-
 
         $factory = $this->jwtGuard->factory();
 
@@ -219,7 +219,8 @@ class AuthController extends BaseController
         return http_success('获取成功', $users);
     }
 
-    public function comfirmEmail() {
+    public function comfirmEmail()
+    {
         $user = $this->jwtGuard->user();
         $user->activated = true;
         $user->activation_token = null;
@@ -228,11 +229,29 @@ class AuthController extends BaseController
         return http_success('激活成功');
     }
 
-    public function resetPasswordByEmail() {
+    public function resetPasswordByEmail()
+    {
 
     }
 
-    public function Status(Request $request){
+    public function Status(Request $request)
+    {
+        $user = $this->jwtGuard->user();
+        $page = $request->page;
+        $size = $request->size;
+        $statuses = $user->statuses()
+            ->orderBy('created_at', 'desc')
+            ->paginate($size, ['*'], 'page', $page);
+        return http_success('获取成功', $statuses);
+    }
+    public function feed(Request $request)
+    {
+        // $page = $request->page;
+        // $size = $request->size;
+        // $feed = $this->statuses() // this是空的？
+        //     ->orderBy('created_at', 'desc')
+        //     ->paginate($size, ['*'], 'page', $page);
+
         $user = $this->jwtGuard->user();
         $page = $request->page;
         $size = $request->size;
