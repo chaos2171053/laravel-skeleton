@@ -26,5 +26,5 @@ Route::group([
         Route::get('/{id}/status', 'Auth\AuthController@Status')->name('users.status');
 
     });
-
+    Route::resource('statuses', 'StatusesController', ['only' => ['store', 'destroy']]);
 });
